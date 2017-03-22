@@ -44,7 +44,7 @@
                             hitType: 'event',
                             eventCategory: 'Click', 
                             eventAction: 'Click', 
-                            eventLabel: 'pagina del bottone',
+                            eventLabel: 'Nome del Click',
                             nonInteraction: false
                         }
                     }
@@ -80,6 +80,22 @@
                 if (this.settings.unbounce.active === true) this.noBounce();
 			},
             
+            // CLICK 
+            trackClicks: function() {
+                
+                var thisPlugin = this,
+                    clicks = this.settings.clicks;
+                
+                if (clicks > 0) {
+                    $.each(clicks, function(index) {
+                        $(this.selector).on('click', function() {
+                            ga('send', this.fieldsObject);
+                        });
+                    })
+                }
+                
+            },
+            
             // OUTBOUND LINKS
 			trackOutboundLink: function() {
                 var thisPlugin = this;
@@ -95,16 +111,12 @@
                     console.log(hostname +" "+url);
                     if (hostname !== url) {
                         console.log('start googleAnalyticsNoBounce');
-                        ga('send', {
-                            hitType: thisPlugin.settings.outbounds.fieldsObject.hitType,
-                            eventCategory: thisPlugin.settings.outbounds.fieldsObject.eventCategory,
-                            eventAction: thisPlugin.settings.outbounds.fieldsObject.eventAction,
-                            eventLabel: thisPlugin.settings.outbounds.fieldsObject.eventLabel
-                        });
+                        ga('send', thisPlugin.settings.outbounds.fieldsObject);
                     }
                 });  
 			},
             
+            // NO BOUNCE
             noBounce: function() {
                 
                 var thisPlugin = this;
@@ -144,12 +156,8 @@
                 function sendNoBounce() {
                     if ((didScroll) && (visitTookTime) && !(bounceSent)) {
                         bounceSent = true;
-                        ga('send', {
-                            hitType: thisPlugin.settings.unbounce.fieldsObject.hitType,
-                            eventCategory: thisPlugin.settings.unbounce.fieldsObject.eventCategory,
-                            eventAction: thisPlugin.settings.unbounce.fieldsObject.eventAction,
-                            eventLabel: thisPlugin.settings.unbounce.fieldsObject.eventLabel
-                        });
+                        ga('send', thisPlugin.settings.unbounce.fieldsObject);
+                        
                         if (thisPlugin.settings.debug === true) console.log('gaTrackers: send noBounce OK');
                     }
                 }
