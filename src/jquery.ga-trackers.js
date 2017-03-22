@@ -80,15 +80,19 @@
                 if (this.settings.unbounce.active === true) this.noBounce();
 			},
             
-            // CLICK 
+            /* ********************************************** */
+            /* CLICK */
+            /* ********************************************** */
             trackClicks: function() {
                 
                 var thisPlugin = this,
                     clicks = this.settings.clicks;
                 
                 if (clicks > 0) {
+                    if (thisPlugin.settings.debug === true) console.log('gaTrackers: start TrackLink');
                     $.each(clicks, function(index) {
                         $(this.selector).on('click', function() {
+                            if (thisPlugin.settings.debug === true) console.log('gaTrackers: send LINK to GA');
                             ga('send', this.fieldsObject);
                         });
                     })
@@ -96,27 +100,41 @@
                 
             },
             
-            // OUTBOUND LINKS
+            /* ********************************************** */
+            // OUTBOUND LINKS 
+            /* ********************************************** */
 			trackOutboundLink: function() {
                 var thisPlugin = this;
+                
+                var pattern = new RegExp("(http|ftp|https)://[\w-]+(\.[\w-]+)*([\w.,@?^=%&amp;:/~+#-]*[\w@?^=%&amp;/~+#-])?"); // fragment locater
+                
                     
                 $(this.element).find('a').on('click', function (e) {
+                    
                     e.preventDefault();
+                    
+                    if (thisPlugin.settings.debug === true) console.log('gaTrackers: start OutboundLink');
+                    
                     var hostname = window.location.hostname,
-                        url = $(this).attr('href');
+                    url = $(this).attr('href');
                     
-                    hostname = hostname.replace('http://','').replace('https://','').replace('www.','').split('/')[0];
-                    url = url.replace('http://','').replace('https://','').replace('www.','').split('/')[0];
-                    
-                    console.log(hostname +" "+url);
-                    if (hostname !== url) {
-                        console.log('start googleAnalyticsNoBounce');
-                        ga('send', thisPlugin.settings.outbounds.fieldsObject);
+                    if(!pattern.test(url)) {
+                        hostname = hostname.replace('http://','').replace('https://','').replace('www.','').split('/')[0];
+                        url = url.replace('http://','').replace('https://','').replace('www.','').split('/')[0];
+
+                        if (thisPlugin.settings.debug === true) console.log('gaTrackers: OutboundLink check link -> ' + hostname + " " + url);
+
+                        if (hostname !== url) {
+                            if (thisPlugin.settings.debug === true) console.log('gaTrackers: OutboundLink send OUTBOUND to GA');
+                            ga('send', thisPlugin.settings.outbounds.fieldsObject);
+                        }    
                     }
                 });  
 			},
             
+            /* ********************************************** */
             // NO BOUNCE
+            /* ********************************************** */
             noBounce: function() {
                 
                 var thisPlugin = this;

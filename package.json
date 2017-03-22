@@ -1,0 +1,34 @@
+{
+  "name": "jquery-google-analitycs-tracker",
+  "version": "0.0.3",
+  "description": "Simple jQuery auto tracker for Google Analytics",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gix075/jquery-google-analytics-tracker.git"
+  },
+  "keywords": [
+    "google",
+    "analytics",
+    "google",
+    "analytics",
+    "jquery",
+    "plugin",
+    "tracking",
+    "custom",
+    "tracking",
+    "ga"
+  ],
+  "author": "Gix075",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Gix075/jquery-google-analytics-tracker/issues"
+  },
+  "homepage": "https://github.com/Gix075/jquery-google-analytics-tracker#readme",
+  "dependencies": {
+    "grunt": "^1.0.1"
+  }
+}
