@@ -27,7 +27,7 @@
        	                eventLabel: 'Time spent and page scrolled'
                     }
                 },
-                externals: {
+                outbounds: {
                     active: true,
                     fieldsObject: {
                         hitType: 'event',
@@ -39,16 +39,17 @@
                 },
                 clicks: [
                     {
-                        "selector":"selettore",
+                        selector: "#click_01",
                         fieldsObject: {
                             hitType: 'event',
-                            eventCategory: 'Outbound Link', 
-                            eventAction: 'link in uscita', 
+                            eventCategory: 'Click', 
+                            eventAction: 'Click', 
                             eventLabel: 'pagina del bottone',
                             nonInteraction: false
                         }
                     }
-                ]
+                ],
+                debug: true
 			};
 
 		// The actual plugin constructor
@@ -75,7 +76,8 @@
 				// and this.settings
 				// you can add more functions like the one below and
 				// call them like the example below
-				this.trackOutboundLink();
+				if (this.settings.outbounds.active === true) this.trackOutboundLink();
+                if (this.settings.unbounce.active === true) this.noBounce();
 			},
             
             // OUTBOUND LINKS
@@ -92,38 +94,50 @@
                     
                     console.log(hostname +" "+url);
                     if (hostname !== url) {
-                        alert ('true');
-                    }else{
-                        alert ('false');
+                        console.log('start googleAnalyticsNoBounce');
+                        ga('send', {
+                            hitType: thisPlugin.settings.outbounds.fieldsObject.hitType,
+                            eventCategory: thisPlugin.settings.outbounds.fieldsObject.eventCategory,
+                            eventAction: thisPlugin.settings.outbounds.fieldsObject.eventAction,
+                            eventLabel: thisPlugin.settings.outbounds.fieldsObject.eventLabel
+                        });
                     }
                 });  
 			},
             
             noBounce: function() {
+                
+                var thisPlugin = this;
 
-                console.log('start googleAnalyticsNoBounce');
+                console.log('gaTrackers: start noBounce');
 
                 var visitTookTime = false,
                     didScroll = false,
                     bounceSent = false,
                     scrollCount = 0;
 
-                setTimeout(timeElapsed, 20000);
+                if (this.settings.unbounce.timeOnPage[0] === true) {
+                    if (thisPlugin.settings.debug === true) console.log('gaTrackers: start noBounce TimeOnPage');
+                    setTimeout(timeElapsed, this.settings.unbounce.timeOnPage[1]);
+                }
 
                 window.addEventListener ?
                     window.addEventListener('scroll', testScroll, false) :
                     window.attachEvent('onScroll', testScroll);
 
                 function testScroll() {
+                    if (thisPlugin.settings.debug === true) console.log('gaTrackers: start noBounce TestScroll');
                     ++scrollCount;
                     if (scrollCount == 2) {
                         didScroll = true
                     };
+                    if (thisPlugin.settings.debug === true) console.log('gaTrackers: send noBounce to GA (scroll)');
                     sendNoBounce();
                 }
 
                 function timeElapsed() {
                     visitTookTime = true;
+                    if (thisPlugin.settings.debug === true) console.log('gaTrackers: send noBounce to GA (time)');
                     sendNoBounce();
                 }
 
@@ -131,11 +145,12 @@
                     if ((didScroll) && (visitTookTime) && !(bounceSent)) {
                         bounceSent = true;
                         ga('send', {
-                            hitType: 'event',
-                            eventCategory: 'Unbounce',
-                            eventAction: 'NoBounce',
-                            eventLabel: 'Time spent and page scrolled'
+                            hitType: thisPlugin.settings.unbounce.fieldsObject.hitType,
+                            eventCategory: thisPlugin.settings.unbounce.fieldsObject.eventCategory,
+                            eventAction: thisPlugin.settings.unbounce.fieldsObject.eventAction,
+                            eventLabel: thisPlugin.settings.unbounce.fieldsObject.eventLabel
                         });
+                        if (thisPlugin.settings.debug === true) console.log('gaTrackers: send noBounce OK');
                     }
                 }
 
