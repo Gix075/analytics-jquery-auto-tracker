@@ -105,30 +105,25 @@
             /* ********************************************** */
 			trackOutboundLink: function() {
                 var thisPlugin = this;
-                
-                var pattern = new RegExp("(http|ftp|https)://[\w-]+(\.[\w-]+)*([\w.,@?^=%&amp;:/~+#-]*[\w@?^=%&amp;/~+#-])?"); // fragment locater
-                
+                if (thisPlugin.settings.debug === true) console.log('gaTrackers: start OutboundLink');
                     
                 $(this.element).find('a').on('click', function (e) {
                     
                     e.preventDefault();
                     
-                    if (thisPlugin.settings.debug === true) console.log('gaTrackers: start OutboundLink');
+                    var domainRe = /https?:\/\/((?:[\w\d-]+\.)+[\w\d]{2,})/i,
+                        hostname = window.location.hostname,
+                        url = $(this).attr('href');
                     
-                    var hostname = window.location.hostname,
-                    url = $(this).attr('href');
+                    if (thisPlugin.settings.debug === true) console.log('gaTrackers: OutboundLink check link -> ' + hostname + " " + url);
                     
-                    if(!pattern.test(url)) {
-                        hostname = hostname.replace('http://','').replace('https://','').replace('www.','').split('/')[0];
-                        url = url.replace('http://','').replace('https://','').replace('www.','').split('/')[0];
-
-                        if (thisPlugin.settings.debug === true) console.log('gaTrackers: OutboundLink check link -> ' + hostname + " " + url);
-
-                        if (hostname !== url) {
+                    if (url.match(domainRe)) {
+                        if (domainRe.exec(hostname)[1] !== domainRe.exec(url)[1]) {
                             if (thisPlugin.settings.debug === true) console.log('gaTrackers: OutboundLink send OUTBOUND to GA');
                             ga('send', thisPlugin.settings.outbounds.fieldsObject);
-                        }    
+                        } 
                     }
+                    
                 });  
 			},
             
