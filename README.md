@@ -1,4 +1,4 @@
-# analytics-jquery-auto-tracker (version 0.0.2)
+# jQuery Google Analytics Tracker (version 0.0.4)
 Simple jQuery auto tracker for Google Analytics
 
 This jQuery Plugin is a simple tool to send events to Google Analytics. This plugin is very ease to use.

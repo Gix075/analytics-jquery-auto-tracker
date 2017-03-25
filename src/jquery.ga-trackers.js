@@ -78,6 +78,7 @@
 				// call them like the example below
 				if (this.settings.outbounds.active === true) this.trackOutboundLink();
                 if (this.settings.unbounce.active === true) this.noBounce();
+                this.trackClicks();
 			},
             
             /* ********************************************** */
@@ -88,7 +89,7 @@
                 var thisPlugin = this,
                     clicks = this.settings.clicks;
                 
-                if (clicks > 0) {
+                if (clicks.length > 0) {
                     if (thisPlugin.settings.debug === true) console.log('gaTrackers: start TrackLink');
                     $.each(clicks, function(index) {
                         $(this.selector).on('click', function() {
@@ -118,7 +119,7 @@
                     if (thisPlugin.settings.debug === true) console.log('gaTrackers: OutboundLink check link -> ' + hostname + " " + url);
                     
                     if (url.match(domainRe)) {
-                        if (domainRe.exec(hostname)[1] !== domainRe.exec(url)[1]) {
+                        if (hostname !== domainRe.exec(url)[1]) {
                             if (thisPlugin.settings.debug === true) console.log('gaTrackers: OutboundLink send OUTBOUND to GA');
                             ga('send', thisPlugin.settings.outbounds.fieldsObject);
                         } 
