@@ -39,7 +39,7 @@
                 },
                 clicks: [
                     {
-                        selector: "#click_01",
+                        selector: "#click_01", // can be a class or id
                         fieldsObject: {
                             hitType: 'event',
                             eventCategory: 'Click', 
@@ -49,6 +49,16 @@
                         }
                     }
                 ],
+                onscreen: [{
+                    id: "click_01", //must be an univocal id
+                    fieldsObject: {
+                        hitType: 'event',
+                        eventCategory: 'Click', 
+                        eventAction: 'Click', 
+                        eventLabel: 'Nome del Click',
+                        nonInteraction: false
+                    }
+                }],
                 debug: true
 			};
 
@@ -78,7 +88,8 @@
 				// call them like the example below
 				if (this.settings.outbounds.active === true) this.trackOutboundLink();
                 if (this.settings.unbounce.active === true) this.noBounce();
-                this.trackClicks();
+                if (this.settings.clicks.length > 0) this.trackClicks();
+                if (this.settings.onscreen.length > 0) this.trackOnScreen();
 			},
             
             /* ********************************************** */
@@ -88,19 +99,40 @@
                 
                 var thisPlugin = this,
                     clicks = this.settings.clicks;
-                
-                if (clicks.length > 0) {
-                    if (thisPlugin.settings.debug === true) console.log('gaTrackers: start TrackLink');
-                    $.each(clicks, function(index) {
-                        $(this.selector).on('click', function() {
-                            if (thisPlugin.settings.debug === true) console.log('gaTrackers: send LINK to GA');
-                            ga('send', this.fieldsObject);
-                        });
-                    })
-                }
-                
+
+                if (thisPlugin.settings.debug === true) console.log('gaTrackers: start TrackLink');
+                $.each(clicks, function(index) {
+                    $(this.selector).on('click', function() {
+                        if (thisPlugin.settings.debug === true) console.log('gaTrackers: send LINK to GA');
+                        ga('send', this.fieldsObject);
+                    });
+                });
+ 
             },
             
+            /* ********************************************** */
+            // VISIBLE ELEMENTS
+            /* ********************************************** */
+            trackOnScreen: function() {
+                var thisPlugin = this,
+                    onscreen = this.settings.onscreen;
+                if (thisPlugin.settings.debug === true) console.log('gaTrackers: start trackOnScreen');
+                if(jQuery().onScrollPosition) {
+                 $.each(onscreen, function(index) {
+                     this.id = this.id.replace('#',"");
+                     this.id = '#' + this.id;
+                     $(this.id).onScrollPosition({
+                        callbackOnTrue: function() {
+                            if (thisPlugin.settings.debug === true) console.log('gaTrackers: send ELEMENT IS VISIBLE to GA');
+                            ga('send', this.fieldsObject);
+                        }
+                    });
+                 });    
+                    
+                }else{
+                    console.log('%c gaTrackers: ERROR! jquery.ga-trackers.onscroll is needed! ', 'background: red; color: #ffffff');
+                }
+            },
             /* ********************************************** */
             // OUTBOUND LINKS 
             /* ********************************************** */
