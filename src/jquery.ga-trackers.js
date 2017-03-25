@@ -32,33 +32,13 @@
                     fieldsObject: {
                         hitType: 'event',
        	                eventCategory: 'Outbound Link', 
-       	                eventAction: 'link in uscita', 
-       	                eventLabel: 'pagina del bottone',
+       	                eventAction: 'Exit Link', 
+       	                eventLabel: window.location.href,
                         transport: 'beacon'
                     }
                 },
-                clicks: [
-                    {
-                        selector: "#click_01", // can be a class or id
-                        fieldsObject: {
-                            hitType: 'event',
-                            eventCategory: 'Click', 
-                            eventAction: 'Click', 
-                            eventLabel: 'Nome del Click',
-                            nonInteraction: false
-                        }
-                    }
-                ],
-                onscreen: [{
-                    id: "click_01", //must be an univocal id
-                    fieldsObject: {
-                        hitType: 'event',
-                        eventCategory: 'Click', 
-                        eventAction: 'Click', 
-                        eventLabel: 'Nome del Click',
-                        nonInteraction: false
-                    }
-                }],
+                clicks: [],
+                onscreen: [],
                 debug: true
 			};
 
@@ -142,7 +122,7 @@
                     
                 $(this.element).find('a').on('click', function (e) {
                     
-                    e.preventDefault();
+                    //e.preventDefault();
                     
                     var domainRe = /https?:\/\/((?:[\w\d-]+\.)+[\w\d]{2,})/i,
                         hostname = window.location.hostname,
