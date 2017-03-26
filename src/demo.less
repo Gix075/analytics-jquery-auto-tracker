@@ -1,21 +1,32 @@
+/*! 
+    jQuery Google Analytics Tracker
+    --------------------------------------
+    This is the demo css file. This file is not needed bu plugin.
+*/
+
+@font-1: "Roboto Condensed", sans-serif;
+@color-1: #31a4ce;
+@color-1_hover: #076689;
+@white: #fff;
+
 body {
-    font-family: "Roboto Condensed", sans-serif;
+    font-family: @font-1;
     font-weight: 300;
 }
 .navbar-inverse {
-    background: #31a4ce;
-    border-color: #31a4ce;
+    background: @color-1;
+    border-color: @color-1;
     .navbar-nav>li>a {
-        color: #fff;
+        color: @white;
     }
     .navbar-nav>.active>a, 
     .navbar-nav>.active>a:focus, 
     .navbar-nav>.active>a:hover {
-        color: #fff;
-        background-color: #076689;
+        color: @white;
+        background-color: @color-1_hover;
     }
     .navbar-brand {
-        color: #ffffff;
+        color: @white;
         text-transform: uppercase;
     }
 }
